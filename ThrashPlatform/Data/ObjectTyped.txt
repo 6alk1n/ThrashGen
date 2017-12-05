@@ -1,0 +1,16 @@
+PlayerSprite
+32
+32
+Data/Sprites/player.bmp
+0
+0
+32
+32
+Player
+32
+32
+Data/Sprites/playerSprite.bmp
+0
+0
+368
+400
