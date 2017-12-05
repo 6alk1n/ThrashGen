@@ -2,9 +2,9 @@
 //Core.hpp basic engine interface
 
 ---Core info---
-Current version - 0.2
-Date(d,m,y)		- 07.06.2017
-Version Name 	- ThrashEngine v 0.2 
+Current version - 0.3
+Date(d,m,y)		- 04.09.2017
+Version Name 	- ThrashEngine v 0.3
 
 *******************************/
 
@@ -62,7 +62,7 @@ namespace ThrashEngine {
 	};
 
 	static EngineState _CoreState = EngineState::Invalid; //Global Engine and status state
-	static const char* EngineVersion = "0.2c";	   //Version of Engine
+	static const char* EngineVersion = "0.3";	   //Version of Engine
 	static const char* EngineVersionState = "alpha"; //State Version of Engine
 
 	//Init SDL stuff
@@ -100,5 +100,6 @@ namespace ThrashEngine {
 		std::ifstream infile(fileName); //check with ifstream
 		return infile.good();
 	}
+
 
 }

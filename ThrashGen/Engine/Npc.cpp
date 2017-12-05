@@ -2,41 +2,40 @@
 namespace ThrashEngine {
 	NPC::NPC()
 	{
-		m_virtualState = VirtualStateNPC;
+		__virtualization_level = VirtualLevelNPC;
 		target = nullptr;
-		properties.state = Idle;
 		enableAI = true;
-		timelastattack = 0;
-		timeJump = 0;
+
 	}
 	NPC::~NPC()
 	{
+
 	}
-	ResultState NPC::Update()
+	ResultState NPC::Update(double timestep)
 	{
 		if (enableAI)
 		{
 			if (!target) //find target
 			{
 
-				std::vector<Sprite*>* ptr = m_managerPtr->GetSpritePtr();
+				std::list<Object*>* ptr = &m_managerPtr->objects;
 				for (auto i = ptr->begin(); i != ptr->end(); i++)
 				{
 					//Chase and attack 
-					if (*i != this &&  //Not the same obj
-						((Object*)(*i))->GetVirtualState() != ThrashEngine::VirtualStateObject && //Is NPC
+				/*	if (*i != this &&  //Not the same obj
+						((Object*)(*i))->GetVirtualState() != ThrashEngine::VirtualLevelObject && //Is NPC
 						((NPC*)(*i))->properties.fraction != properties.fraction) //Different fractions
 					{
 						if (ThrashEngine::DistanceSq(this, *i) < properties.range*properties.range)
 						{
 							target = (NPC*)(*i);
 						}
-					}
+					}*/
 				}
 			}
 			if (target)
 			{
-				if (ThrashEngine::DistanceSq(this, target) > properties.range*properties.range)
+			/*	if (ThrashEngine::(this, target) > properties.range*properties.range)
 				{
 					target = nullptr;//Not in range
 				}
@@ -58,17 +57,16 @@ namespace ThrashEngine {
 						if (damage < 0)damage = 0;
 						target->properties.hp -= damage;
 					}
-				}
+				}*/
 			}
 			else
 			{
-				m_vel -= m_vel*properties.breakSpeed;
-				if (m_vel.LenSq() < 1) m_vel = Vector(0, 0);
+			//	m_vel -= m_vel*properties.breakSpeed;
+			//	if (m_vel.LenSq() < 1) m_vel = Vector(0, 0);
 			}
 		}
-		timelastattack++;
-		timeJump++;
-		AnimationObject::Update();
+
+		AnimationObject::Update(timestep);
 		return ResultState::Success;
 	}
 	ResultState NPC::Draw(Graphics* graphics, double offx, double offy)
@@ -76,26 +74,25 @@ namespace ThrashEngine {
 		AnimationObject::Draw(graphics, offx, offy);
 
 		//Health bar
-		if (properties.maxhp) {
+		/*if (properties.maxhp) {
 			graphics->SetColor(255, 0, 0, 255);
-			graphics->DrawRect(m_x + offx, m_y - 10 + offy, m_width + 1, 10);
+			graphics->DrawRect(m_pos.x + offx, m_pos.y - 10 + offy, m_pos.w + 1, 10);
 			graphics->SetColor(0, 255, 0, 255);
-			graphics->DrawRect(m_x + offx, m_y - 10 + offy, m_width*((properties.hp + 1) / properties.maxhp), 10);
-		}
+			graphics->DrawRect(m_pos.x + offx, m_pos.y - 10 + offy, m_pos.w*((properties.hp + 1) / properties.maxhp), 10);
+		}*/
 		return ResultState::Success;
 	}
 	ResultState NPC::Update(Object* object, int event)
 	{
-		if (m_virtualState == VirtualStatePlayer)
+		if (__virtualization_level == VirtualLevelNPC)
 		{
-			if (*(double*)GetProperty("TimeBetweenJump").data < timeJump)
+			if (m_property->GetDouble("TimeBetweenJump") < 60)
 			{
-				canJump = true;
-				SetProperty("CanJump", true);
-				timeJump = 0;
+				m_property->Set("CanJump", 0);
+				//timeJump = 0;
 			}
 		}
-		if (object->GetVirtualState() == VirtualStateNPC)
+		if (object->GetVirtualState() == VirtualLevelNPC)
 		{
 
 		}
@@ -104,100 +101,6 @@ namespace ThrashEngine {
 	void NPC::EnableAI(bool flag)
 	{
 		enableAI = flag;
-	}
-
-
-	NPCProperty NPC::GetProperty(std::string propName)
-	{
-		auto it = m_property.find(propName);
-		if (it != m_property.end()) return it->second; //Texture was found
-		return NPCProperty();
-	}
-	NPCProperty NPC::SetProperty(std::string propName, NPCProperty property)
-	{
-		auto it = m_property.find(propName);
-		if (it != m_property.end())
-		{
-			it->second.type = property.type;
-			delete it->second.data;
-			it->second.data = property.data;
-			return it->second;
-		}
-		m_property.insert({ propName,property });
-		return property;
-	}
-
-	NPCProperty NPC::SetProperty(std::string propName, double value)
-	{
-		auto it = m_property.find(propName);
-		NPCProperty prop;
-		prop.type = DOUBLE;
-		double* ptr = new double;
-		*ptr = value;
-		prop.data = ptr;
-		if (it != m_property.end())
-		{
-			it->second.type = prop.type;
-			delete it->second.data;
-			it->second.data = prop.data;
-			return it->second;
-		}
-		m_property.insert({ propName,prop });
-		return prop;
-	}
-	NPCProperty NPC::SetProperty(std::string propName, std::string value)
-	{
-		auto it = m_property.find(propName);
-		NPCProperty prop;
-		prop.type = DOUBLE;
-		std::string* ptr = new std::string;
-		*ptr = value;
-		prop.data = ptr;
-		if (it != m_property.end())
-		{
-			it->second.type = prop.type;
-			delete it->second.data;
-			it->second.data = prop.data;
-			return it->second;
-		}
-		m_property.insert({ propName,prop });
-		return prop;
-	}
-	NPCProperty NPC::SetProperty(std::string propName, char value)
-	{
-		auto it = m_property.find(propName);
-		NPCProperty prop;
-		prop.type = DOUBLE;
-		char* ptr = new char;
-		*ptr = value;
-		prop.data = ptr;
-		if (it != m_property.end())
-		{
-			it->second.type = prop.type;
-			delete it->second.data;
-			it->second.data = prop.data;
-			return it->second;
-		}
-		m_property.insert({ propName,prop });
-		return prop;
-	}
-	NPCProperty NPC::SetProperty(std::string propName, bool value)
-	{
-		auto it = m_property.find(propName);
-		NPCProperty prop;
-		prop.type = DOUBLE;
-		bool* ptr = new bool;
-		*ptr = value;
-		prop.data = ptr;
-		if (it != m_property.end())
-		{
-			it->second.type = prop.type;
-			delete it->second.data;
-			it->second.data = prop.data;
-			return it->second;
-		}
-		m_property.insert({ propName,prop });
-		return prop;
 	}
 
 }

@@ -20,4 +20,15 @@ namespace ThrashEngine {
 		);
 	}
 }
+#else
+static int ErrorBox(tchar* title, tchar* msg) //Throws a box with ok button
+{
+	return MessageBox(
+		NULL,
+		title,
+		msg,
+		MB_OK
+	);
+}
+
 #endif

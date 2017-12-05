@@ -1,8 +1,0 @@
-PlayerSprite
-32
-32
-Data/Sprites/player.bmp
-0
-0
-32
-32

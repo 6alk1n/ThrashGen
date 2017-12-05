@@ -9,6 +9,8 @@ namespace ThrashEngine
 		m_WindowState = EngineState::Invalid;
 		m_ScreenHeight = 0;
 		m_ScreenWidth = 0;
+		m_SystemName = "window";
+	//	SystemList->push_back((System*)this);
 	}
 	Window::~Window()
 	{
@@ -92,7 +94,12 @@ namespace ThrashEngine
 			m_WindowName = name;
 			return ResultState::Success;
 		}
-		else return ResultState::Fail;
+		else
+		{
+			SDL_SetWindowTitle(m_Window, name.c_str());
+			return ResultState::Success;
+		}
+		 return ResultState::Fail;
 	}
 
 	SDL_Surface* Window::GetSurface()
@@ -124,7 +131,11 @@ namespace ThrashEngine
 		}
 		else return ResultState::Fail;
 	}
-
+	ResultState Window::SetVsync(bool flag)
+	{
+		SDL_GL_SetSwapInterval(flag);
+		return ResultState::Success;
+	}
 
 	unsigned int Window::GetScreenWidth()
 	{
@@ -133,5 +144,21 @@ namespace ThrashEngine
 	unsigned int Window::GetScreenHeight()
 	{
 		return m_ScreenHeight;
+	}
+
+	EngineState Window::Restart(std::list<PropertyClass*> list)
+	{
+		for (auto i = list.begin(); i != list.end(); i++)
+		{
+		/*	if (*(*i)->name == "width")
+			{
+				ResizeWindow(*(double*)((*i)->data), m_ScreenHeight);
+			}
+			else if (*(*i)->name == "height");
+			{
+				ResizeWindow(m_ScreenWidth, *(double*)((*i)->data));
+			}*/
+		}
+		return EngineState::Ok;
 	}
 }

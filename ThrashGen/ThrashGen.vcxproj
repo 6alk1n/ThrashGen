@@ -22,7 +22,7 @@
     <ProjectGuid>{CA814357-EC2B-4003-AB9C-8A98597E9AFC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>ThrashGen</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -78,6 +78,9 @@
     <IncludePath>C:\Users\Vadim\Documents\Visual Studio 2015\Projects\ThrashGen\ThrashGen\Deps\Include;C:\Users\Vadim\Documents\Visual Studio 2017\Projects\ThrashGen\ThrashGen\Deps\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Vadim\Documents\Visual Studio 2015\Projects\ThrashGen\ThrashGen\Deps\Lib;C:\Users\Vadim\Documents\Visual Studio 2017\Projects\ThrashGen\ThrashGen\Deps\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Users\Vadim\Documents\Visual Studio 2017\Projects\ThrashGen\ThrashGen\Deps\Include;C:\Users\Vadim\Documents\Visual Studio 2017\Projects\ThrashGen\ThrashGen;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>
@@ -85,6 +88,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -92,6 +96,9 @@
     <Lib>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -145,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Animation.hpp" />
+    <ClInclude Include="Engine\AnimationFactory.hpp" />
     <ClInclude Include="Engine\Application.hpp" />
     <ClInclude Include="Engine\AudioMaster.hpp" />
     <ClInclude Include="Engine\Camera.hpp" />
@@ -154,17 +162,18 @@
     <ClInclude Include="Engine\Graphics.hpp" />
     <ClInclude Include="Engine\GUI.hpp" />
     <ClInclude Include="Engine\Input.hpp" />
+    <ClInclude Include="Engine\Light.hpp" />
     <ClInclude Include="Engine\Log.hpp" />
     <ClInclude Include="Engine\Monitoring.hpp" />
     <ClInclude Include="Engine\Npc.hpp" />
     <ClInclude Include="Engine\Object.hpp" />
+    <ClInclude Include="Engine\ObjectFactory.hpp" />
     <ClInclude Include="Engine\ObjectManager.hpp" />
     <ClInclude Include="Engine\Parameters.hpp" />
     <ClInclude Include="Engine\Physics.hpp" />
     <ClInclude Include="Engine\ResourceManager.hpp" />
     <ClInclude Include="Engine\Sprite.hpp" />
-    <ClInclude Include="Engine\SpriteManager.hpp" />
-    <ClInclude Include="Engine\TileMap.hpp" />
+    <ClInclude Include="Engine\System.hpp" />
     <ClInclude Include="Engine\Timer.hpp" />
     <ClInclude Include="Engine\Types.hpp" />
     <ClInclude Include="Engine\Utility.hpp" />
@@ -172,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Animation.cpp" />
+    <ClCompile Include="Engine\AnimationFactory.cpp" />
     <ClCompile Include="Engine\Application.cpp" />
     <ClCompile Include="Engine\AudioMaster.cpp" />
     <ClCompile Include="Engine\Camera.cpp" />
@@ -185,14 +195,17 @@
     <ClCompile Include="Engine\Monitoring.cpp" />
     <ClCompile Include="Engine\Npc.cpp" />
     <ClCompile Include="Engine\Object.cpp" />
+    <ClCompile Include="Engine\ObjectFactory.cpp" />
     <ClCompile Include="Engine\ObjectManager.cpp" />
+    <ClCompile Include="Engine\Parameters.cpp" />
     <ClCompile Include="Engine\ResourceManager.cpp" />
     <ClCompile Include="Engine\Sprite.cpp" />
-    <ClCompile Include="Engine\SpriteManager.cpp" />
-    <ClCompile Include="Engine\TileMap.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\Utility.cpp" />
     <ClCompile Include="Engine\Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

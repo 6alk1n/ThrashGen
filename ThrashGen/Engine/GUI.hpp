@@ -15,10 +15,11 @@ namespace ThrashEngine
 		void Draw();
 		void Update(double);
 		void AddGUIObject(GUIObject*);
+		void SetActiveGUIObject(GUIObject*);
 	protected:
 		Graphics* m_graphicsPtr;
 		Input* m_input;
 		std::vector<GUIObject*> m_GUIObjects;
-	
+		GUIObject* m_GUIActiveObject;
 	};
 }

@@ -1,10 +1,14 @@
 #include "Graphics.hpp"
+#include "Application.hpp"
 namespace ThrashEngine
 {
 	Graphics::Graphics()
 	{
 		m_renderer = nullptr;
+		m_SystemName = "graphics";
 		m_state = EngineState::Invalid;
+
+//	SystemListPtr->push_back((System*)this);
 	}
 	Graphics::~Graphics()
 	{
@@ -68,6 +72,11 @@ namespace ThrashEngine
 	ResultState Graphics::SetColor(Uint32 color)
 	{
 		if (SDL_SetRenderDrawColor(m_renderer, color && 255, (color << 8) && 255, (color << 16) && 255, 255) == 0) return ResultState::Success;
+		else return ResultState::Fail;
+	}
+	ResultState Graphics::SetColor(SDL_Color color)
+	{
+		if (SDL_SetRenderDrawColor(m_renderer, color.r,color.g,color.b,color.a) == 0) return ResultState::Success;
 		else return ResultState::Fail;
 	}
 
@@ -196,6 +205,16 @@ namespace ThrashEngine
 		else return ResultState::Fail;
 	}
 
+	ResultState Graphics::SetVsync(bool flag)
+	{
+		if(flag)
+			SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
+		else
+			SDL_SetHint(SDL_HINT_RENDER_VSYNC, "0");
+		
+		return ResultState::Success;
+	}
+
 	SDL_PixelFormat* Graphics::GetPixelFormat()
 	{
 		return m_pixformat;
@@ -217,5 +236,26 @@ namespace ThrashEngine
 	{
 		SDL_RenderGetScale(m_renderer, &w, &h);
 		return ResultState::Success;
+	}
+
+	EngineState Graphics::Restart(std::list<PropertyClass*> list)
+	{
+
+		for (auto i = list.begin(); i != list.end(); i++)
+		{		
+			// (*(*i)->name == "width")
+			//{
+			//	screen->m_window->ResizeWindow(*(double*)(w->data), *(double*)(h->data));
+			//}
+		}
+
+		/*
+		ThrashEngine::NPCProperty* w = screen->AppParams.GetProperty("width");
+		ThrashEngine::NPCProperty* h = screen->AppParams.GetProperty("height");
+		ThrashEngine::NPCProperty* vsync = screen->AppParams.GetProperty("vsync");
+		screen->m_window->ResizeWindow(*(double*)(w->data), *(double*)(h->data));
+		screen->m_window->SetVsync(*(bool*)(vsync->data));
+		screen->m_graphics->SetVsync(*(bool*)(vsync->data));*/
+		return EngineState::Ok;
 	}
 }

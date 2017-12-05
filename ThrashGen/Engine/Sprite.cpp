@@ -3,110 +3,88 @@ namespace ThrashEngine {
 	Sprite::Sprite()
 	{
 		m_texture = nullptr;
-		m_x = m_y = m_u = m_v = m_uend = m_vend = 0;
-		m_killSprite = true;
+
+		m_pos = m_textureUV=0;
+		m_kill = true;
+		__virtualization_level=VirtualLevelSprite;
 	}
 	Sprite::~Sprite()
 	{
 
 	}
-	SDL_Texture* Sprite::GetTexture()
-	{
-		return m_texture;
-	}
 	void Sprite::SetTexture(SDL_Texture* texture)
 	{
 		m_texture = texture;
-		SDL_QueryTexture(m_texture, NULL, NULL, &m_uend, &m_vend);
+		int u, v;
+		u = v = 0;
+		SDL_QueryTexture(m_texture, NULL, NULL, &u,&v);
+		m_textureUV.w = u;
+		m_textureUV.h = v;
 	}
 	ResultState Sprite::Draw(Graphics* graphics, double offx, double offy)
 	{
 		SDL_Rect dest;
-		dest.x = (int)m_x+ (int)offx;
-		dest.y = (int)m_y+ (int)offy;
-		dest.w = (int)m_width;
-		dest.h = (int)m_height;
+		dest.x = (int)m_pos.x+ (int)offx;
+		dest.y = (int)m_pos.y+ (int)offy;
+		dest.w = (int)m_pos.w;
+		dest.h = (int)m_pos.h;
 		SDL_Rect src;
-		src.x = m_u;
-		src.y = m_v;
-		src.w = m_uend;
-		src.h = m_vend;
+		src.x = m_textureUV.x;
+		src.y = m_textureUV.y;
+		src.w = m_textureUV.w;
+		src.h = m_textureUV.h;
 		return graphics->DrawTexture(m_texture, &dest, &src);
 	}
-	void  Sprite::SetPos(double x, double y)
+	ResultState Sprite::Update(Sprite* spr, int)
 	{
-		m_x = x; m_y = y;
+		return ResultState::Success;
 	}
-	void Sprite::SetPos(Vector pos)
+	ResultState Sprite::Update(double)
 	{
-		m_x = pos.x;
-		m_y = pos.y;
-	}
-	void  Sprite::SetUV(int u, int v, int uend, int vend)
-	{
-		m_u = u; m_v = v; m_uend = uend; m_vend = vend;
+		return ResultState::Success;
 	}
 	void  Sprite::Move(double x, double y)
 	{
-		m_x += x;
-		m_y += y;
+		m_pos.x += x;
+		m_pos.y += y;
 	}
 	void Sprite::Move(Vector mov)
 	{
-		m_x += mov.x;
-		m_y += mov.y;
+		m_pos += mov;
 	}
-	double  Sprite::GetX()
+	void Sprite::Move(VectorFull vec)
 	{
-		return m_x;
+		m_pos += Vector(vec.x,vec.y);
 	}
-	double  Sprite::GetY()
+	void Sprite::Move(Rectangle rect)
 	{
-		return m_y;
-	}
-	void  Sprite::GetUV(int& u, int& v, int& uend, int& vend)
+		m_pos += rect;
+	}	
+	void Sprite::SetSize(double w, double h)
 	{
-		u = m_u;
-		v = m_v;
-		uend = m_uend;
-		vend = m_vend;
-	}
-	Vector Sprite::GetPos()
-	{
-		return Vector(m_x, m_y);
-	}
-	double Sprite::GetWidth()
-	{
-		return m_width;
-	}
-	double Sprite::GetHeight()
-	{
-		return m_height;
-	}
-	void Sprite::SetSize(double w , double h)
-	{
-		m_width = w;
-		m_height = h;
+		m_pos.w = w;
+		m_pos.h = h;
 	}
 
-	ResultState Sprite::Update(Sprite* spr)
-	{
-		return ResultState::Success;
-	}
-	ResultState Sprite::Update()
-	{
-		return ResultState::Success;
-	}
 	Rectangle Sprite::GetRect()
 	{
-		return Rectangle(m_x, m_y, m_width, m_height);
+		return m_pos;
 	}
-	int Sprite::GetID()
+
+	Vector Sprite::GetPos()
 	{
-		return m_SpriteID;
+		return Vector(m_pos.x, m_pos.y);
+	}	
+	void  Sprite::GetUV(int& u, int& v, int& uend, int& vend)
+	{
+		u = m_textureUV.x;
+		v = m_textureUV.y;
+		uend = m_textureUV.w;
+		vend = m_textureUV.h;
 	}
-	void Sprite::SetID( int id)
+
+	unsigned int Sprite::GetVirtualState()
 	{
-		m_SpriteID = id;
+		return __virtualization_level;
 	}
 }

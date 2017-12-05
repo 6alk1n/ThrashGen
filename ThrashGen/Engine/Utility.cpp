@@ -64,5 +64,63 @@ namespace ThrashEngine
 		}
 		return filename;
 	}
+	std::list<std::string> Utility::ParseString(std::string str)
+	{
+		std::list<std::string> result;
+		int start=0, end=0;
+		for (auto i = str.begin(); i != str.end(); )
+		{
+			while (i != str.end() &&  *i == ' ' )
+			{
+				i++;
+				start++;
+			}
+			end = start;
+			while (i != str.end() && *i != ' ' )
+			{
+				i++;
+				end++;
+			}
+			if(end>start)
+			result.push_back(str.substr(start,end-start));
+			start = end;
+		}
+		return result;
+	}
+	unsigned int Utility::CheckSum(std::string filePath)
+	{
+		std::ifstream file;
+		file.open(filePath.c_str(), std::ios::in | std::ios::binary);
+		if (file) {
+			uint32_t sum = 0;
 
+			uint32_t word = 0;
+			while (file.read(reinterpret_cast<char*>(&word), sizeof(word))) {
+				sum += word;
+				word = 0;
+			}
+
+			sum += word; // add the last word, could be 0
+						 // if the file size is divisible by 4
+
+			return sum;
+		}
+		return 0;
+	}
+	std::string Utility::NumToHex(unsigned int num)
+	{
+		char* converttable = "0123456789abcdef";
+		std::string result = "";
+		while (num)
+		{
+			
+			result += converttable[num&15];
+			num = num >> 4;
+		}
+		while (result.size() < 8)
+		{
+			result.push_back('0');
+		}
+		return result;
+	}
 }

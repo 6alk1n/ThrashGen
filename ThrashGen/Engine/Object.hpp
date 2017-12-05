@@ -4,6 +4,42 @@ Object - advanced object of sprite. Instead of drawing can handle interactions w
 ***********/
 #include "Sprite.hpp"
 #include <string>
+
+
+
+//!!!NEW SYSTEM!!!
+namespace ThrashEngine {
+  const int VirtualLevelObject= VirtualLevelSprite+1;
+  class ObjectManager;
+  class Object : public Sprite
+  {
+    public:
+	  //Methods
+	  Object();  
+	  Object(Sprite*);
+	  virtual ~Object();
+	  virtual ResultState Draw(Graphics*, double offx=0, double offy=0);
+	  virtual ResultState Update(Object*,int);
+	  virtual ResultState Update(double);
+	  unsigned int GetVirtualizationLevel();
+
+	  //Members
+	  Vector m_vel;
+	  bool m_active;
+	  bool m_collideable;
+	  bool m_debug;
+	  bool m_static;
+	  PropertyClass* m_property;
+	  unsigned int m_objectID;
+
+	  ObjectManager* m_managerPtr;
+	  friend class ObjectManager;
+	  std::string m_objectName;
+  };
+}
+
+
+/*
 namespace ThrashEngine {
 	const int VirtualStateObject = 1;
 	const int VirtualStateGUIObject = 3;
@@ -61,7 +97,8 @@ namespace ThrashEngine {
 
 	static double DistanceSq(Sprite* a, Sprite* b)
 	{
-		Vector vec = a->GetPos() - b->GetPos();
+		Vector vec = a->m_pos.GetVector() - b->m_pos.GetVector();
 		return vec.LenSq();
 	}
 }
+*/

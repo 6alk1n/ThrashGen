@@ -1,5 +1,6 @@
 #pragma once
 #include "Core.hpp"
+#include <list>
 /*
 Input class is basicaly a cache with functions.
 */
@@ -31,18 +32,22 @@ namespace ThrashEngine
 		void Press(int key);//press key
 		void Release(int key);//release key
 		void SetMousePos(Vector pos);//set mouse pos
-		void SetMousePos(int x, int y);//set mouse pos
+		void SetMousePos(double x, double y);//set mouse pos
 		void SetDelta(int x, int y);
 		int GetDeltaX();
 		int GetDeltaY();
 		//Getters
-		int GetMouseX();
-		int GetMouseY();
+		double GetMouseX();
+		double GetMouseY();
 		Vector GetMousePos();
+		std::list<int> GetPressedKeys();
+		void ClearPressedKeys();
+		void SetScale(double, double);
 	protected:
 		KeyState keys[256 + 5];
-		int mousex, mousey;
+		double mousex, mousey;
 		int deltax, deltay;
-
+		std::list<int> m_pressedkeys;
+		double m_scaleWidth, m_scaleHeight;
 	};
 }

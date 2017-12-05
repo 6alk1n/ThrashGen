@@ -6,6 +6,7 @@ Uses SDL2.0 ttf stuff;
 #include "Core.hpp"
 #include <SDL_ttf.h>
 #include <string>
+#include <list>
 #include "Graphics.hpp"
 namespace ThrashEngine {
 	class Font
@@ -33,14 +34,14 @@ namespace ThrashEngine {
 		void SetGraphics(Graphics*);	//Set graphicsPtr
 		void SetPos(Vector);	//Set Position of field
 		void SetSize(Vector);	//Size of field
-		void ClearField();		//Clear text from field
+		virtual void ClearField();		//Clear text from field
 		void AddField(std::string);	//Add text to field
 		FontField& operator<<(std::string);	//operator add text to field
 		FontField& operator<<(double);//operator add double to field
 		void Print(int);
 		SDL_Texture* GetRenderedTexture();//Get rendered text
 		void SetColor(SDL_Color);//Set FieldColor
-		ResultState Render();//Draw field
+		virtual ResultState Render();//Draw field
 	protected:
 		Font* m_font;//ptr to font
 		Graphics* m_graphicsPtr;//ptr to graphics
@@ -49,5 +50,23 @@ namespace ThrashEngine {
 		std::string m_text; //string for field
 		bool m_needsUpdate; //used int render(creates text only once withous changes)
 		SDL_Color m_textColor;
+	};
+	class Text :public FontField
+	{
+	public:
+		Text();
+		~Text();
+		void SetLetterSize(unsigned int,unsigned int);
+		void EndLine(); //Start New Line
+		virtual ResultState Render();//Draw field
+		virtual void ClearField();		//Clear text from field
+		void SetDrawStyle(unsigned int);
+		void SetSize(Vector);
+	protected:
+		unsigned int m_lettersizewidth;
+		unsigned int m_lettersizeheight;
+		std::list<std::string> m_output_text;
+		unsigned int m_drawstyle;
+		Vector m_size;
 	};
 }

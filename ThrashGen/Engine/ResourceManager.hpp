@@ -18,6 +18,7 @@ namespace ThrashEngine
 		ResultState ExistsTexture(std::string); //Check if texture is in map
 		ResultState Clear();//Delete all textures
 		ResultState SetColorKey(Uint32); //Set color key for loading textures
+		std::string FindTexture(SDL_Texture*);
 
 	private:
 		std::map<std::string, SDL_Texture*> m_textures;

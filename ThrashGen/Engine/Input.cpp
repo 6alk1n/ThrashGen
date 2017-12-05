@@ -8,6 +8,7 @@ namespace ThrashEngine
 			keys[i] = KeyState::Released;
 		}
 		mousex = mousey = 0;
+		m_scaleWidth = m_scaleHeight = 1;
 	}
 	Input::~Input()
 	{
@@ -38,9 +39,12 @@ namespace ThrashEngine
 			if (keys[i] == KeyState::Up) keys[i] = KeyState::Released;
 		}
 		deltax = deltay = 0;
+		
+		m_pressedkeys.clear();
 	}
 	void Input::Press(int key)
 	{
+		if (keys[key] == KeyState::Released) m_pressedkeys.push_back(key);
 		if(keys[key]!=KeyState::Pressed) keys[key] = KeyState::Down;
 	}
 
@@ -56,24 +60,24 @@ namespace ThrashEngine
 		mousex = (int)pos.x;
 		mousey = (int)pos.y;
 	}
-	void Input::SetMousePos(int x, int y)
+	void Input::SetMousePos(double x, double y)
 	{
 		deltax = x - mousex;
 		deltay = y - mousey;
 		mousex = x;
 		mousey = y;
 	}
-	int Input::GetMouseX()
+	double Input::GetMouseX()
 	{
-		return mousex;
+		return mousex / m_scaleWidth;
 	}
-	int Input::GetMouseY()
+	double Input::GetMouseY()
 	{
-		return mousey;
+		return mousey / m_scaleWidth;
 	}
 	Vector Input::GetMousePos()
 	{
-		return Vector(mousex, mousey);
+		return Vector(mousex / m_scaleWidth, mousey / m_scaleWidth);
 	}
 	void Input::SetDelta(int x, int y)
 	{
@@ -87,5 +91,20 @@ namespace ThrashEngine
 	int Input::GetDeltaY()
 	{
 		return deltay;
+	}
+
+	std::list<int> Input::GetPressedKeys()
+	{
+		return m_pressedkeys;
+	}
+	void Input::ClearPressedKeys()
+	{
+		m_pressedkeys.clear();
+	}
+
+	void Input::SetScale(double scaleWidth, double scaleHeight)
+	{
+		m_scaleHeight = scaleHeight;
+		m_scaleWidth = scaleWidth;
 	}
 }

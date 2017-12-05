@@ -41,6 +41,8 @@ namespace ThrashEngine
 		bool isPlaying();
 		bool isWeak();
 		ALuint GetSource();
+		void SetVolume(float);
+		void SetPitch(float);
 	protected:
 		SoundBuffer* m_buffer;
 		ALuint m_sourceId;
@@ -56,8 +58,11 @@ namespace ThrashEngine
 		void Pause();
 		std::list<SoundSource*>* GetSounds();
 		void Update();
+		void SetVolumeAll(float);
+		void SetPitchAll(float);
 	protected:
 		std::list<SoundSource*> m_sources;
+		float m_volume, m_pitch;
 	};
 
 

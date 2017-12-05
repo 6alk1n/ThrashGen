@@ -1,6 +1,7 @@
 #pragma once
 #include "Core.hpp"
 #include <vector>
+#include "System.hpp"
 /*
 Class is used for graphics rendering. 
 Contains Renderer of window. Also used for drawing and creating textures
@@ -13,7 +14,7 @@ namespace ThrashEngine {
 		std::string m_name;
 		SDL_Rect m_view;
 	};
-	class Graphics
+	class Graphics:System
 	{
 	public:
 		Graphics();
@@ -25,6 +26,7 @@ namespace ThrashEngine {
 
 		ResultState SetColor(int r, int g, int b, int a);// Set renderer color
 		ResultState SetColor(Uint32);// Set renderer color
+		ResultState SetColor(SDL_Color);
 
 		ResultState DrawTexture(SDL_Texture*); //Draw texture on whole screen
 		ResultState DrawTexture(SDL_Texture*, SDL_Rect*); //Draw texture in the specific point
@@ -50,9 +52,14 @@ namespace ThrashEngine {
 
 		ResultState SetRendererScale(float,float);
 		ResultState GetRendererScale(float&, float&);
+
+		ResultState SetVsync(bool);
 		
 		SDL_PixelFormat* GetPixelFormat();
 		Uint32 GetColor(Uint8, Uint8, Uint8);
+
+		virtual EngineState Restart(std::list<PropertyClass*>);
+
 	protected:
 		SDL_Renderer* m_renderer;
 		SDL_PixelFormat* m_pixformat;

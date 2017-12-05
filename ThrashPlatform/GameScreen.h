@@ -1,7 +1,6 @@
 #pragma once
 #include <Engine\Application.hpp>
 #include <Engine\ResourceManager.hpp>
-#include <Engine\TileMap.hpp>
 #include <Engine\Camera.hpp>
 #include <Engine\Font.hpp>
 #include <Engine\Config.hpp>
@@ -9,35 +8,15 @@
 #include <Engine\GUI.hpp>
 #include "LevelReader.hpp"
 #include <Engine/Npc.hpp>
+#include <Engine/AnimationFactory.hpp>
+#include <Engine/ObjectFactory.hpp>
 
 #include "GUIClasses.hpp"
+#include "GameScreenGUI.hpp"
 
-
-const int GameWindowWidth = 1024;
-const int GameWindowHeight = 768;
-
-static int LevelEditorTableX = 100;
-static int LevelEditorTableY = 600;
-
-static int LevelEditorCellX = 64;
-static int LevelEditorCellY = 64;
-
-static int LevelEditorCellColumn = 10;
-static int LevelEditorCellRow = 2;
-
-static int LevelEditorParamX = LevelEditorTableX + LevelEditorCellX*LevelEditorCellColumn + 1;
-static int LevelEditorParamY = 200;
-
-static int EditorMouseScroll = 5;
-static int EditorMouseBorderScroll = 10;
 
 using namespace ThrashEngine;
 
-void* m_exitFunc(void*);
-void* m_saveFunc(void*);
-void* m_openFunc(void*);
-void* m_editFunc(void*);
-void* m_selectFunc(void*);
 
 class GameScreen :public ThrashEngine::Application
 {
@@ -49,6 +28,7 @@ public:
 	virtual ResultState Update() override;
 	virtual ResultState OnInit()override;
 	virtual ResultState OnShutdown()override;
+	virtual ResultState DrawGUIText();
 
 	void AddObject(std::string name, double x, double y, double w,double h,bool stat);
 	void AddAnimaton(NPC*);
@@ -56,23 +36,22 @@ public:
 	TextureManager* m_textures;
 	SoundBufferManager* m_soundBuffers;
 	Font* m_font;
-	FontField m_fontfield1;
-	FontField m_fontfield2;
-	FontField m_fontfield3;
-	FontField m_fontfield4;
-	FontField m_fontfield5;
-	FontField m_monitorField1;
-	TileMap* m_world;
+	Text m_monitorField;
+	Text m_playerstats_text;
+	Text m_testtext;
+	ObjectManager* m_world;
 	Camera* m_camera;
 	NPC* m_player;
-	bool m_canJump;
+
 	Vector m_oldplayerpos;
+
 	double m_slowdownVel;
 	double m_playerMaxSpeed;
 	double m_acceleration;
 	double m_gravity;
 	double m_jumpVel;
 	double m_playerMaxYSpeed;
+
 	Config* m_configFile;
 	LevelReader m_levelreader;
 	Timer m_timer;
@@ -85,9 +64,17 @@ public:
 	GUIButton m_openButton;
 	GUIButton m_editorButton;
 
+	GUIInputLabel m_inputlabel;
+
 	SoundSource* m_music;
 	SoundManager* m_soundManager;
 
+	GUIDeveloperConsole m_console;
+
+	ObjectFactory* m_objectFactory;
+	AnimationObjectFactory* m_animobjectFactory;
+	NpcFactory* m_npcFactory;
+	AnimationFactory* m_animFactory;
 
 	//---------Level Editor variables----------//
 	bool m_levelEditorState;
@@ -96,7 +83,7 @@ public:
 
 	Object** LevelEditorSelectorItems;
 	GUIButton* LevelEditorSelectorButtons;
-	FontField m_nameField;
+	Text m_nameField;
 
 	GUISpinButton m_SpinButtonWidth;
 	GUISpinButton m_SpinButtonHeight;
@@ -111,6 +98,30 @@ public:
 	double EnemyDamage;
 	double EnemyArmor;
 	double EnemyInteractionColdDown;
+
+	struct GuiParam
+	{
+		 int GameWindowWidth ;
+		 int GameWindowHeight ;
+
+		 int LevelEditorTableX ;
+		 int LevelEditorTableY;
+
+		 int LevelEditorCellX ;
+		 int LevelEditorCellY ;
+
+		 int LevelEditorCellColumn ;
+		 int LevelEditorCellRow ;
+
+		 int LevelEditorParamX ;
+		 int LevelEditorParamY;
+
+		 int EditorMouseScroll;
+		 int EditorMouseBorderScroll;
+
+		 double ScalingWidth;
+		 double ScalingHeight ;
+	} m_guiparams;
 
 };
 

@@ -77,18 +77,25 @@
     <IncludePath>C:\Users\Vadim\Documents\Visual Studio 2015\Projects\ThrashGen\ThrashGen\Deps\Include;C:\Users\Vadim\Documents\Visual Studio 2015\Projects\ThrashGen\ThrashGen;C:\Users\Vadim\Documents\Visual Studio 2017\Projects\ThrashGen\ThrashGen\Deps\Include;C:\Users\Vadim\Documents\Visual Studio 2017\Projects\ThrashGen\ThrashGen;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Vadim\Documents\Visual Studio 2015\Projects\ThrashGen\ThrashGen\Deps\Lib;C:\Users\Vadim\Documents\Visual Studio 2015\Projects\ThrashGen\Release;C:\Users\Vadim\Documents\Visual Studio 2017\Projects\ThrashGen\ThrashGen\Deps\Lib;C:\Users\Vadim\Documents\Visual Studio 2017\Projects\ThrashGen\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Users\Vadim\Documents\Visual Studio 2017\Projects\ThrashGen\ThrashGen;C:\Users\Vadim\Documents\Visual Studio 2017\Projects\ThrashGen\ThrashGen\Deps\Include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;ThrashGen.lib;SDL2_ttf.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>C:\Users\Vadim\Documents\Visual Studio 2017\Projects\ThrashGen\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -127,18 +134,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConsoleCommands.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Gameplay\Item.cpp" />
+    <ClCompile Include="Gameplay\ItemStorage.cpp" />
+    <ClCompile Include="GameScreenGUI.cpp" />
     <ClCompile Include="GUIClasses.cpp" />
     <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="LevelReader.cpp" />
+    <ClCompile Include="StaticData\StaticData.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ConsoleCommands.hpp" />
     <ClInclude Include="Enemy.hpp" />
+    <ClInclude Include="Gameplay\ItemStorage.hpp" />
+    <ClInclude Include="GameScreenGUI.hpp" />
     <ClInclude Include="GUIClasses.hpp" />
     <ClInclude Include="GameMechanics.hpp" />
     <ClInclude Include="GameScreen.h" />
+    <ClInclude Include="Gameplay\Item.hpp" />
     <ClInclude Include="LevelReader.hpp" />
+    <ClInclude Include="StaticData\StaticData.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,5 +1,6 @@
 #include "Application.hpp"
-
+#include "Config.hpp"
+#include "System.hpp"
 namespace ThrashEngine
 {
 	Application::Application()
@@ -10,6 +11,8 @@ namespace ThrashEngine
 		m_state = EngineState::Invalid;
 		m_done = false;
 		m_fps = 60;
+		m_SystemName = "application";
+
 	}
 	Application::~Application()
 	{
@@ -17,6 +20,7 @@ namespace ThrashEngine
 	}
 	ResultState Application::Init()
 	{
+		SetProperties();
 		if (m_window->Init()!=ResultState::Success)
 		{
 			m_state = EngineState::Failed;
@@ -33,6 +37,9 @@ namespace ThrashEngine
 			return ResultState::Fail;
 		}
 		m_state = EngineState::Ok;
+
+		//SystemListpush_back((System*)&(*m_window));
+		//SystemList->push_back((System*)&(*m_graphics));
 		return ResultState::Success;
 	}
 	ResultState Application::Run()
@@ -126,8 +133,10 @@ namespace ThrashEngine
 	{
 		//Create new Window
 		m_window = new Window();
+//		SystemListPtr->push_back((System*)m_window);
 		m_input = new Input();
 		m_graphics = new Graphics();
+	//	SystemListPtr->push_back((System*)m_graphics);
 		m_state = EngineState::Created;
 		m_audio = new AudioMaster();
 		return ResultState::Success;
@@ -148,5 +157,63 @@ namespace ThrashEngine
 	ResultState Application::OnShutdown()
 	{
 		return ResultState::Success;
+	}
+	void Application::SetProperties()
+	{
+		AppParams.Set("engine", "Thrash engine 0.3a","Name of engine");
+		AppParams.Set("vsync", 1,"Virtual synchronization");
+		AppParams.Set("width", 1024.0,"Screen Width");
+		AppParams.Set("height", 768.0,"Screen Height");
+		AppParams.Set("title", "Platform","Window title");
+		AppParams.Set("posx", 0.0,"Window position X");
+		AppParams.Set("posy", 0.0,"Window position Y");
+		AppParams.Set("debugmode", 1.0,"Draw debug stuff and monitors");
+		AppParams.Set("mastervolume", 0.7, "Master Volume(all sounds)");
+		Config m_configFile;
+		std::cout << "Loading Data/config.cfg" << std::endl;
+		if (!m_configFile.LoadConfig("Data/config.cfg"))
+		{
+			std::cout << "Failed to load config file" << std::endl;
+		}
+		else {
+			m_configFile.SetGroup("Window");
+			ThrashEngine::ConfigData conData;
+
+			conData = m_configFile.GetParam("ScreenWidth"); //Screen Width
+			AppParams.Set("width", conData.data);
+
+			conData = m_configFile.GetParam("ScreenHeight"); // Screen Height
+			AppParams.Set("height", conData.data);
+
+			conData = m_configFile.GetParam("Vsync"); // Screen Height
+			AppParams.Set("vsync", conData.data);
+
+			conData = m_configFile.GetParam("Debugmode"); // Screen Height
+			AppParams.Set("debugmode", conData.data);
+
+			m_configFile.SetGroup("Sound");
+
+			conData = m_configFile.GetParam("MasterVolume"); // Screen Height
+			AppParams.Set("mastervolume", conData.data);
+
+
+			//conData = m_configFile.GetParam("Title"); // Screen Height
+			//AppParams.SetPropertyStr("title", conData.data);
+
+		}
+		if (m_window) 
+		{
+			//auto w = AppParams.GetDouble("width");
+			double width = AppParams.GetDouble("width");
+
+			//auto h = AppParams.GetProperty("height");
+			double height = AppParams.GetDouble("height");
+			m_window->SetScreenSize((unsigned int)(width), (unsigned int)(height));
+		}
+	}
+
+	EngineState Application::Restart(std::list<PropertyClass*>)
+	{
+		return EngineState::Ok;
 	}
 }

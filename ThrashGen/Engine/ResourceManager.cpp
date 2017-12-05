@@ -21,11 +21,16 @@ namespace ThrashEngine
 
 		//Load texture
 		if (m_graphics == nullptr)return nullptr;
-		SDL_Surface* m_surface = SDL_LoadBMP_RW(SDL_RWFromFile(fileName.c_str(), "rb"), 1);
-		SDL_Texture* texture = m_graphics->CreateTexture(m_surface, m_colorkey);
-		SDL_FreeSurface(m_surface); //free surface
-		AddTexture(fileName, texture);
-		return texture;
+		SDL_RWops *rw = SDL_RWFromFile(fileName.c_str(), "rb");
+		if (rw != NULL) {
+			SDL_Surface* m_surface = SDL_LoadBMP_RW(rw, 1);
+			//SDL_RWclose(rw);
+			SDL_Texture* texture = m_graphics->CreateTexture(m_surface, m_colorkey);
+			SDL_FreeSurface(m_surface); //free surface
+			AddTexture(fileName, texture);
+			return texture;
+		}
+		return nullptr;
 	}
 	ResultState TextureManager::AddTexture(std::string fileName, SDL_Texture* texture)
 	{
@@ -52,7 +57,14 @@ namespace ThrashEngine
 		m_colorkey = col;
 		return ResultState::Success;
 	}
-
+	std::string TextureManager::FindTexture(SDL_Texture* texture)
+	{
+		for (auto i = m_textures.begin(); i != m_textures.end(); i++)
+		{
+			if (i->second == texture) return i->first;
+		}
+		return std::string("");
+	}
 	SoundBufferManager::SoundBufferManager(){}
 	SoundBufferManager::~SoundBufferManager(){}
 
@@ -82,4 +94,5 @@ namespace ThrashEngine
 		m_soundBuffers.insert({ fileName,buf });
 		return ResultState::Success;
 	}
+
 }

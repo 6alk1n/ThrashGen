@@ -6,10 +6,11 @@ Window class
 
 #include "Core.hpp"
 #include <string>
+#include "System.hpp"
 
 namespace ThrashEngine {
 
-	class Window
+	class Window:System
 	{
 	public:
 		Window();  //default constructor
@@ -27,9 +28,13 @@ namespace ThrashEngine {
 		SDL_Surface* GetSurface();	//Get ScreenSurface
 		SDL_Window* GetWindow();	//Get SDL object of window
 		ResultState ResizeWindow(unsigned int width, unsigned int height); //Resize already created window
+		ResultState SetVsync(bool);
 
 		unsigned int GetScreenWidth();
 		unsigned int GetScreenHeight();
+
+
+		virtual EngineState Restart(std::list<PropertyClass*>);
 		
 	protected:
 

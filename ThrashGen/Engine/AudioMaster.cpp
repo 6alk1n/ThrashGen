@@ -5,6 +5,7 @@ namespace ThrashEngine {
 	AudioMaster::AudioMaster()
 	{
 		m_device = nullptr;
+
 	}
 	AudioMaster::~AudioMaster()
 	{
@@ -149,6 +150,14 @@ namespace ThrashEngine {
 		alSourcei(m_sourceId, AL_LOOPING, AL_FALSE);
 		// check for errros
 
+	}	
+	void SoundSource::SetVolume(float vol)
+	{
+		alSourcef(m_sourceId, AL_GAIN, vol);
+	}
+	void SoundSource::SetPitch(float pit)
+	{
+		alSourcef(m_sourceId, AL_PITCH, pit);
 	}
 	SoundSource::~SoundSource()
 	{
@@ -195,6 +204,8 @@ namespace ThrashEngine {
 	SoundManager::SoundManager()
 	{
 		m_sources.clear();
+		m_volume = 1.0;
+		m_pitch = 1.0;
 	}
 	SoundManager::~SoundManager()
 	{
@@ -203,7 +214,8 @@ namespace ThrashEngine {
 	}
 	void SoundManager::Play(SoundSource* source)
 	{
-
+		source->SetVolume(m_volume);
+		source->SetPitch(m_pitch);
 		m_sources.push_back(source);
 		source->Play();
 	}
@@ -235,6 +247,21 @@ namespace ThrashEngine {
 			m_sources.erase(*i);
 		}
 	}
-
+	void SoundManager::SetVolumeAll(float vol)
+	{
+		for (auto i = m_sources.begin(); i != m_sources.end(); i++)
+		{
+			(*i)->SetVolume(vol);
+		}
+		m_volume = vol;
+	}
+	void SoundManager::SetPitchAll(float pit)
+	{
+		for (auto i = m_sources.begin(); i != m_sources.end(); i++)
+		{
+			(*i)->SetPitch(pit);
+		}
+		m_pitch = pit;
+	}
 
 }

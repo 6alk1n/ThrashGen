@@ -22,7 +22,6 @@ namespace ThrashEngine
 	SDL_Texture* Font::RenderTexture(Graphics* graphics,std::string text, SDL_Color color)
 	{
 		if (m_Font == nullptr) return nullptr;
-
 		//Render text surface
 		SDL_Surface* textSurface = TTF_RenderText_Solid(m_Font, text.c_str(), color);
 		if (textSurface == NULL)
@@ -104,7 +103,7 @@ namespace ThrashEngine
 	}
 	FontField& FontField::operator<<(double val)
 	{
-		m_text.append(DoubleToStr(val));
+		m_text.append(DoubleToStr(val,5,4));
 		m_needsUpdate = true;
 		return *this;
 	}
@@ -138,4 +137,79 @@ namespace ThrashEngine
 		m_graphicsPtr->DrawTexture(m_font->GetRenderedTexture(), &r);
 		return ResultState::Success;
 	}
+
+	Text::Text():FontField()
+	{
+		SetLetterSize(8,16);//Set default size
+		m_drawstyle = 0; //Set default style (top->down asc_hist)
+	}
+	Text::~Text()
+	{
+
+	}
+	void Text::SetLetterSize(unsigned int w,unsigned int h)
+	{
+		m_lettersizewidth = w;
+		m_lettersizeheight = h;
+	}
+	void Text::EndLine()
+	{
+		m_output_text.push_back(m_text);
+		m_text = "";
+	}
+	void Text::ClearField()		//Clear text from field
+	{
+		m_text.clear();
+		m_needsUpdate = true;
+		m_output_text.clear();
+	}
+	ResultState Text::Render()
+	{
+		if (m_text != "") EndLine();
+		unsigned int linenum = 0;
+		if (m_drawstyle == 0) {
+			for (auto i = m_output_text.begin(); i != m_output_text.end(); i++) {
+				//			if (m_needsUpdate)
+				{
+					m_font->RenderTexture(m_graphicsPtr, *i, m_textColor);
+					m_needsUpdate = false;
+				}
+				SDL_Rect r;
+				r.x = (int)m_pos.x;
+				r.y = (int)m_pos.y + linenum*m_lettersizeheight;
+				r.w = (int)m_lettersizewidth*(*i).length();
+				r.h = (int)m_lettersizeheight;
+				m_graphicsPtr->DrawTexture(m_font->GetRenderedTexture(), &r);
+				linenum++;
+			}
+		}
+		else if (m_drawstyle == 1)
+		{
+			int m_startpos = (m_size.y) - (m_output_text.size()*m_lettersizeheight);
+			for (auto i = m_output_text.begin(); i != m_output_text.end(); i++) {
+				//			if (m_needsUpdate)
+				{
+					m_font->RenderTexture(m_graphicsPtr, *i, m_textColor);
+					m_needsUpdate = false;
+				}
+				SDL_Rect r;
+				r.x = (int)m_pos.x;
+				r.y = (int)m_pos.y + linenum*m_lettersizeheight+ m_startpos;
+				r.w = (int)m_lettersizewidth*(*i).length();
+				r.h = (int)m_lettersizeheight;
+				m_graphicsPtr->DrawTexture(m_font->GetRenderedTexture(), &r);
+				linenum++;
+			}
+		}
+		return ResultState::Success;
+	}
+	void Text::SetDrawStyle(unsigned int style)
+	{
+		m_drawstyle = style;
+	}
+	void Text::SetSize(Vector size)
+	{
+		m_size = size;
+	}
+
 }

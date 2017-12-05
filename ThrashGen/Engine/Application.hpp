@@ -6,15 +6,21 @@
 #include "AudioMaster.hpp"
 #include "Monitoring.hpp"
 
+#include "Parameters.hpp"
+#include "System.hpp"
 /*
 Applcation class. Main game object. It loops all process. 
 Further application must be inherited from this class to start process
 
 */
+
+
+
 namespace ThrashEngine
 {
 
-	class Application
+
+	class Application:System
 	{
 	public:
 		Application();
@@ -24,6 +30,7 @@ namespace ThrashEngine
 		virtual ResultState Init(); //Initializes all subsystems
 		virtual ResultState Run();  //Start main loop
 		virtual ResultState Shutdown(); //Free memory from subsystems
+		void SetProperties();
 
 		//virtual functions for overriding
 		virtual ResultState Draw()=0;
@@ -32,6 +39,7 @@ namespace ThrashEngine
 		virtual ResultState OnShutdown()=0;
 
 		Window* GetWindow(); 
+		virtual EngineState Restart(std::list<PropertyClass*>);
 
 	public:
 		Window* m_window; //window pointer
@@ -42,6 +50,8 @@ namespace ThrashEngine
 		AudioMaster* m_audio; // Audio system(sound)
 		Monitoring m_monitor; // Resource (memory,cpu) manager,viewer
 		unsigned int m_fps;
+		PropertyClass  AppParams;
+		std::vector<System*> SystemList;
 	};
-
+	static std::vector<System*>* SystemListPtr;
 }
